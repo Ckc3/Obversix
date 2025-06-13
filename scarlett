@@ -1,0 +1,415 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scarlett - Obversix Owner</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000000;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: none;
+            overflow: hidden;
+        }
+
+        .profile-container {
+            text-align: center;
+            z-index: 10;
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 80px 60px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: liftUp 1.2s ease-out 0.2s forwards;
+            min-width: 500px;
+        }
+
+        .profile-name {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 40px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            letter-spacing: 2px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: liftUp 0.8s ease-out 0.8s forwards;
+        }
+
+        .profile-pic {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            margin-bottom: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: liftUp 1s ease-out 0.5s forwards;
+        }
+
+        .profile-pic:hover {
+            transform: scale(1.05) translateY(0);
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .bio {
+            font-size: 2rem;
+            margin-bottom: 45px;
+            color: rgba(255, 255, 255, 0.9);
+            min-height: 2.5rem;
+            border-right: 2px solid #ffffff;
+            padding-right: 15px;
+            white-space: nowrap;
+            overflow: hidden;
+            font-weight: 300;
+            letter-spacing: 1px;
+            opacity: 1;
+        }
+
+        .bio.typing-complete {
+            border-right: none;
+            animation: fadeInCursor 0.5s ease-in-out;
+        }
+
+        @keyframes fadeInCursor {
+            from { border-right: 2px solid #ffffff; }
+            to { border-right: none; }
+        }
+
+        .discord-btn {
+            padding: 16px 28px;
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            backdrop-filter: blur(10px);
+            margin-top: 30px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: liftUp 0.8s ease-out 2.2s forwards;
+            letter-spacing: 0.5px;
+        }
+
+        .discord-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        @keyframes liftUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .click-anywhere {
+            position: absolute;
+            bottom: 40px;
+            font-size: 0.9rem;
+            color: #666;
+            animation: pulse 2s infinite;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: liftUp 0.6s ease-out 3s forwards, pulse 2s infinite 3.5s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <h1 class="profile-name">Scarlett</h1>
+        <img src="https://cdn.discordapp.com/avatars/1318338354626035712/cfb7657eb1d17c25388d52439d3e2b67.webp?size=1024" alt="Scarlett Profile" class="profile-pic">
+        <div class="bio" id="bio-text"></div>
+        <a href="https://discord.gg/JT8gYTsyfk" target="_blank" class="discord-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419-.0190 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1568 2.4189Z"/>
+            </svg>
+            Discord
+        </a>
+    </div>
+
+    <div class="click-anywhere">Click anywhere to play music</div>
+
+    <audio id="background-audio" loop>
+        <source src="song.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+
+        function bubbleCursor(options) {
+            let hasWrapperEl = options && options.element;
+            let element = hasWrapperEl || document.body;
+
+            let width = window.innerWidth;
+            let height = window.innerHeight;
+            let cursor = { x: width / 2, y: width / 2 };
+            let particles = [];
+            let canvas, context, animationFrame;
+
+            let canvImages = [];
+
+            const prefersReducedMotion = window.matchMedia(
+                "(prefers-reduced-motion: reduce)"
+            );
+
+            prefersReducedMotion.onchange = () => {
+                if (prefersReducedMotion.matches) {
+                    destroy();
+                } else {
+                    init();
+                }
+            };
+
+            function init() {
+                if (prefersReducedMotion.matches) {
+                    console.log(
+                        "This browser has prefers reduced motion turned on, so the cursor did not init"
+                    );
+                    return false;
+                }
+
+                canvas = document.createElement("canvas");
+                context = canvas.getContext("2d");
+
+                canvas.style.top = "0px";
+                canvas.style.left = "0px";
+                canvas.style.pointerEvents = "none";
+
+                if (hasWrapperEl) {
+                    canvas.style.position = "absolute";
+                    element.appendChild(canvas);
+                    canvas.width = element.clientWidth;
+                    canvas.height = element.clientHeight;
+                } else {
+                    canvas.style.position = "fixed";
+                    document.body.appendChild(canvas);
+                    canvas.width = width;
+                    canvas.height = height;
+                }
+
+                bindEvents();
+                loop();
+            }
+
+            function bindEvents() {
+                element.addEventListener("mousemove", onMouseMove);
+                element.addEventListener("touchmove", onTouchMove, { passive: true });
+                element.addEventListener("touchstart", onTouchMove, { passive: true });
+                window.addEventListener("resize", onWindowResize);
+            }
+
+            function onWindowResize(e) {
+                width = window.innerWidth;
+                height = window.innerHeight;
+
+                if (hasWrapperEl) {
+                    canvas.width = element.clientWidth;
+                    canvas.height = element.clientHeight;
+                } else {
+                    canvas.width = width;
+                    canvas.height = height;
+                }
+            }
+
+            function onTouchMove(e) {
+                if (e.touches.length > 0) {
+                    for (let i = 0; i < e.touches.length; i++) {
+                        addParticle(
+                            e.touches[i].clientX,
+                            e.touches[i].clientY,
+                            canvImages[Math.floor(Math.random() * canvImages.length)]
+                        );
+                    }
+                }
+            }
+
+            function onMouseMove(e) {
+                if (hasWrapperEl) {
+                    const boundingRect = element.getBoundingClientRect();
+                    cursor.x = e.clientX - boundingRect.left;
+                    cursor.y = e.clientY - boundingRect.top;
+                } else {
+                    cursor.x = e.clientX;
+                    cursor.y = e.clientY;
+                }
+
+                addParticle(cursor.x, cursor.y);
+            }
+
+            function addParticle(x, y, img) {
+                particles.push(new Particle(x, y, img));
+            }
+
+            function updateParticles() {
+                if (particles.length == 0) {
+                    return;
+                }
+
+                context.clearRect(0, 0, width, height);
+
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update(context);
+                }
+
+                for (let i = particles.length - 1; i >= 0; i--) {
+                    if (particles[i].lifeSpan < 0) {
+                        particles.splice(i, 1);
+                    }
+                }
+
+                if (particles.length == 0) {
+                    context.clearRect(0, 0, width, height);
+                }
+            }
+
+            function loop() {
+                updateParticles();
+                animationFrame = requestAnimationFrame(loop);
+            }
+
+            function destroy() {
+                canvas.remove();
+                cancelAnimationFrame(animationFrame);
+                element.removeEventListener("mousemove", onMouseMove);
+                element.removeEventListener("touchmove", onTouchMove);
+                element.removeEventListener("touchstart", onTouchMove);
+                window.addEventListener("resize", onWindowResize);
+            }
+
+            function Particle(x, y, canvasItem) {
+                const lifeSpan = Math.floor(Math.random() * 90 + 90);
+                this.initialLifeSpan = lifeSpan;
+                this.lifeSpan = lifeSpan;
+                this.velocity = {
+                    x: (Math.random() < 0.5 ? -1 : 1) * (Math.random() / 20),
+                    y: -0.2 + Math.random() * -0.5,
+                };
+                this.position = { x: x, y: y };
+                this.canv = canvasItem;
+
+                this.baseDimension = 4;
+
+                this.update = function (context) {
+                    this.position.x += this.velocity.x;
+                    this.position.y += this.velocity.y;
+                    this.velocity.x += ((Math.random() < 0.5 ? -1 : 1) * 1) / 100;
+                    this.velocity.y -= Math.random() / 800;
+                    this.lifeSpan--;
+
+                    const scale =
+                        0.2 + (this.initialLifeSpan - this.lifeSpan) / this.initialLifeSpan;
+
+                    context.fillStyle = "#e6f1f7";
+                    context.strokeStyle = "#3a92c5";
+                    context.beginPath();
+                    context.arc(
+                        this.position.x - (this.baseDimension / 2) * scale,
+                        this.position.y - this.baseDimension / 2,
+                        this.baseDimension * scale,
+                        0,
+                        2 * Math.PI
+                    );
+
+                    context.stroke();
+                    context.fill();
+                    context.closePath();
+                };
+            }
+
+            init();
+
+            return {
+                destroy: destroy
+            };
+        }
+
+
+        bubbleCursor();
+
+
+        function typeWriter(element, text, speed = 100) {
+            let i = 0;
+            element.innerHTML = '';
+            
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                } else {
+                    element.classList.add('typing-complete');
+                }
+            }
+            type();
+        }
+
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const bioElement = document.getElementById('bio-text');
+                typeWriter(bioElement, 'Owner of Obversix', 100);
+            }, 800);
+        });
+
+
+        const audio = document.getElementById('background-audio');
+        let audioStarted = false;
+
+        document.addEventListener('click', () => {
+            if (!audioStarted) {
+                audio.play();
+                audioStarted = true;
+                document.querySelector('.click-anywhere').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
